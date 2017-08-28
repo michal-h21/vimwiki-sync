@@ -18,11 +18,13 @@ augroup vimwiki
   " using asynchronous jobs
   " we should add some error handling
   function! s:pull_changes()
-    if !exists('g:zettel_synced')
+    " it wasn't actually executed. why?
+    " if !exists('g:zettel_synced')
       let g:zettel_synced = 1
       let gitjob = job_start("git -C " . g:zettel_dir . " pull origin master")
       let taskjob = job_start("task sync")
-    endif
+      echom "vimwiki synced"
+    " endif
   endfunction
 
   " push changes
