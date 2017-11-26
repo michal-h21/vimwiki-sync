@@ -1,4 +1,8 @@
 augroup vimwiki
+  if !exists('g:zettel_synced')
+    let g:zettel_synced = 0
+  endif
+
   " g:zettel_dir is defined by vim_zettel
   if !exists('g:zettel_dir')
     let g:zettel_dir = VimwikiGet('path',g:vimwiki_current_idx) 
@@ -18,13 +22,12 @@ augroup vimwiki
   " using asynchronous jobs
   " we should add some error handling
   function! s:pull_changes()
-    " it wasn't actually executed. why?
-    " if !exists('g:zettel_synced')
+    if g:zettel_synced==0
       let g:zettel_synced = 1
       let gitjob = job_start("git -C " . g:zettel_dir . " pull origin master")
       let taskjob = job_start("task sync")
       echom "vimwiki synced"
-    " endif
+    endif
   endfunction
 
   " push changes
