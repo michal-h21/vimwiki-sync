@@ -27,6 +27,8 @@ augroup vimwiki
       let gitjob = job_start("git -C " . g:zettel_dir . " pull origin master")
       let taskjob = job_start("task sync")
       echom "vimwiki synced"
+      let currentfile = expand("%")
+      execute "normal :edit " . currentfile
     endif
   endfunction
 
