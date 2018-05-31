@@ -18,17 +18,36 @@ augroup vimwiki
     redraw!
   endfunction
 
+  function! My_reload(timer)
+    echom "reload"
+    execute "normal :edit! " 
+    execute "normal :checktime " 
+  endfunction
+
+  function! My_exit_cb(channel,msg )
+    let currentfile = expand("%")
+    echom "Znovu otevírám ". currentfile
+    " execute "normal :edit! " . currentfile
+    " it is necessary to wait a moment
+    let timer = timer_start(1500, "My_reload", {"repeat": 1})
+  endfunction
+
+  function! My_close_cb(channel)
+    " it seems this callback is necessary to really pull the repo
+  endfunction
+
+
   " pull changes from git origin and sync task warrior for taskwiki
   " using asynchronous jobs
   " we should add some error handling
   function! s:pull_changes()
     if g:zettel_synced==0
       let g:zettel_synced = 1
-      let gitjob = job_start("git -C " . g:zettel_dir . " pull origin master")
+      " let gitjob = job_start("git -C " . g:zettel_dir . " pull origin master", {"exit_cb": "My_exit_cb", "close_cb": "My_exit_cb" })
+      let gitjob = job_start("git -C " . g:zettel_dir . " pull origin master", {"exit_cb": "My_exit_cb", "close_cb": "My_close_cb"})
+      " let gitjob = job_start("git -C " . g:zettel_dir . " pull origin master" )
       let taskjob = job_start("task sync")
-      echom "vimwiki synced"
-      let currentfile = expand("%")
-      execute "normal :edit " . currentfile
+      " echom "sync status" . job_status(gitjob)
     endif
   endfunction
 
