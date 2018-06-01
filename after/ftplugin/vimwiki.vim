@@ -50,7 +50,6 @@ augroup vimwiki
   endfunction
 
   " sync changes at the start
-  " au! VimEnter * call <sid>git_action("git pull origin master")
   au! VimEnter * call <sid>pull_changes()
   au! BufRead * call <sid>pull_changes()
   " auto commit changes on each file change
