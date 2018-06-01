@@ -20,18 +20,9 @@ augroup vimwiki
     redraw!
   endfunction
 
-  function! My_reload(timer)
-    echom "reload"
-    execute "normal :edit! " 
-    execute "normal :checktime " 
-  endfunction
-
   function! My_exit_cb(channel,msg )
-    let currentfile = expand("%")
-    echom "Znovu otevírám ". currentfile
-    " execute "normal :edit! " . currentfile
-    " it is necessary to wait a moment
-    let timer = timer_start(1500, "My_reload", {"repeat": 1})
+    echom "Sync done"
+    execute 'checktime' 
   endfunction
 
   function! My_close_cb(channel)
@@ -45,11 +36,8 @@ augroup vimwiki
   function! s:pull_changes()
     if g:zettel_synced==0
       let g:zettel_synced = 1
-      " let gitjob = job_start("git -C " . g:zettel_dir . " pull origin master", {"exit_cb": "My_exit_cb", "close_cb": "My_exit_cb" })
       let gitjob = job_start("git -C " . g:zettel_dir . " pull origin master", {"exit_cb": "My_exit_cb", "close_cb": "My_close_cb"})
-      " let gitjob = job_start("git -C " . g:zettel_dir . " pull origin master" )
       let taskjob = job_start("task sync")
-      " echom "sync status" . job_status(gitjob)
     endif
   endfunction
 
