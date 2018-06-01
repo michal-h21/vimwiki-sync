@@ -1,6 +1,8 @@
 augroup vimwiki
   if !exists('g:zettel_synced')
     let g:zettel_synced = 0
+  else
+    finish
   endif
 
   " g:zettel_dir is defined by vim_zettel
