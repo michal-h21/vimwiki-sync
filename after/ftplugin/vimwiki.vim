@@ -7,7 +7,7 @@ augroup vimwiki
 
   " g:zettel_dir is defined by vim_zettel
   if !exists('g:zettel_dir')
-    let g:zettel_dir = VimwikiGet('path',g:vimwiki_current_idx) 
+    let g:zettel_dir = vimwiki#vars#get_wikilocal('path') "VimwikiGet('path',g:vimwiki_current_idx)
   endif
   " execute vim function. because vimwiki can be started from any directory,
   " we must use pushd and popd commands to execute git commands in wiki root
