@@ -36,8 +36,13 @@ augroup vimwiki
   function! s:pull_changes()
     if g:zettel_synced==0
       let g:zettel_synced = 1
-      let gitjob = job_start("git -C " . g:zettel_dir . " pull origin master", {"exit_cb": "My_exit_cb", "close_cb": "My_close_cb"})
-      let taskjob = job_start("task sync")
+      if has("nvim")
+        let gitjob = jobstart("git -C " . g:zettel_dir . " pull origin master", {"exit_cb": "My_exit_cb", "close_cb": "My_close_cb"})
+        let taskjob = jobstart("task sync")
+      else
+        let gitjob = job_start("git -C " . g:zettel_dir . " pull origin master", {"exit_cb": "My_exit_cb", "close_cb": "My_close_cb"})
+        let taskjob = job_start("task sync")
+      endif
     endif
   endfunction
 
@@ -45,8 +50,13 @@ augroup vimwiki
   " it seems that Vim terminates before it is executed, so it needs to be
   " fixed
   function! s:push_changes()
-    let gitjob = job_start("git -C " . g:zettel_dir . " push origin master")
-    let taskjob = job_start("task sync")
+    if has("nvim")
+      let gitjob = jobstart("git -C " . g:zettel_dir . " push origin master")
+      let taskjob = jobstart("task sync")
+    else
+      let gitjob = job_start("git -C " . g:zettel_dir . " push origin master")
+      let taskjob = job_start("task sync")
+    endif
   endfunction
 
   " sync changes at the start
