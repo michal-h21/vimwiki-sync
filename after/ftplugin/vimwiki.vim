@@ -42,6 +42,7 @@ augroup vimwiki
       else
         let gitjob = job_start("git -C " . g:zettel_dir . " pull origin master", {"exit_cb": "My_exit_cb", "close_cb": "My_close_cb"})
         let taskjob = job_start("task sync")
+      endif
     endif
   endfunction
 
@@ -55,6 +56,7 @@ augroup vimwiki
     else
       let gitjob = job_start("git -C " . g:zettel_dir . " push origin master")
       let taskjob = job_start("task sync")
+    endif
   endfunction
 
   " sync changes at the start
