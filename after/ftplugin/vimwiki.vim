@@ -9,6 +9,15 @@ augroup vimwiki
   if !exists('g:zettel_dir')
     let g:zettel_dir = vimwiki#vars#get_wikilocal('path') "VimwikiGet('path',g:vimwiki_current_idx)
   endif
+
+  " don't try to start synchronization if the opend file is not in vimwiki
+  " path
+  let current_dir = expand("%:p:h")
+  if !current_dir ==# fnamemodify(g:zettel_dir, ":h")
+    finish
+  endif
+  
+
   " execute vim function. because vimwiki can be started from any directory,
   " we must use pushd and popd commands to execute git commands in wiki root
   " dir. silent is used to disable necessity to press <enter> after each
