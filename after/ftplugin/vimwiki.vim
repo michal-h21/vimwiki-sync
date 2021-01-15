@@ -16,6 +16,11 @@ augroup vimwiki
   if !current_dir ==# fnamemodify(g:zettel_dir, ":h")
     finish
   endif
+
+  " don't sync temporary wiki
+  if vimwiki#vars#get_wikilocal('is_temporary_wiki') == 1
+    finish
+  endif
   
 
   " execute vim function. because vimwiki can be started from any directory,
