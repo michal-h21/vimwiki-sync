@@ -10,6 +10,10 @@ augroup vimwiki
     let g:zettel_dir = vimwiki#vars#get_wikilocal('path') "VimwikiGet('path',g:vimwiki_current_idx)
   endif
 
+  if !exists('g:vimwiki_sync_branch')
+    let g:vimwiki_sync_branch = "HEAD"
+  endif
+
   " don't try to start synchronization if the opend file is not in vimwiki
   " path
   let current_dir = expand("%:p:h")
@@ -51,10 +55,10 @@ augroup vimwiki
     if g:zettel_synced==0
       let g:zettel_synced = 1
       if has("nvim")
-        let gitjob = jobstart("git -C " . g:zettel_dir . " pull origin master", {"exit_cb": "My_exit_cb", "close_cb": "My_close_cb"})
+        let gitjob = jobstart("git -C " . g:zettel_dir . " pull origin " . g:vimwiki_sync_branch, {"exit_cb": "My_exit_cb", "close_cb": "My_close_cb"})
         let taskjob = jobstart("task sync")
       else
-        let gitjob = job_start("git -C " . g:zettel_dir . " pull origin master", {"exit_cb": "My_exit_cb", "close_cb": "My_close_cb"})
+        let gitjob = job_start("git -C " . g:zettel_dir . " pull origin " . g:vimwiki_sync_branch, {"exit_cb": "My_exit_cb", "close_cb": "My_close_cb"})
         let taskjob = job_start("task sync")
       endif
     endif
@@ -65,10 +69,10 @@ augroup vimwiki
   " fixed
   function! s:push_changes()
     if has("nvim")
-      let gitjob = jobstart("git -C " . g:zettel_dir . " push origin master")
+      let gitjob = jobstart("git -C " . g:zettel_dir . " push origin " . g:vimwiki_sync_branch)
       let taskjob = jobstart("task sync")
     else
-      let gitjob = job_start("git -C " . g:zettel_dir . " push origin master")
+      let gitjob = job_start("git -C " . g:zettel_dir . " push origin " . g:vimwiki_sync_branch)
       let taskjob = job_start("task sync")
     endif
   endfunction
@@ -77,8 +81,8 @@ augroup vimwiki
   au! VimEnter * call <sid>pull_changes()
   au! BufRead * call <sid>pull_changes()
   " auto commit changes on each file change
-  au! BufWritePost * call <sid>git_action("git -C " . g:zettel_dir . " add .;git -C " . g:zettel_dir . " commit -m \"Auto commit + push. " . strftime('%c') . "\"")
+  au! BufWritePost * call <sid>git_action("git -C " . g:zettel_dir . " add . ; git -C " . g:zettel_dir . " commit -m \"Auto commit + push. " . strftime('%c') . "\"")
   " push changes only on at the end
-  au! VimLeave * call <sid>git_action("git -C " . g:zettel_dir . " push origin master")
+  au! VimLeave * call <sid>git_action("git -C " . g:zettel_dir . " push origin " . g:vimwiki_sync_branch)
   " au! VimLeave * call <sid>push_changes()
 augroup END
