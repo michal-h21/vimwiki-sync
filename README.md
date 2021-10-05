@@ -37,3 +37,7 @@ remote on Vim exit, and pull changes on Vimwiki startup.
 
     $ git remote add origin git@github.com:username/repo.git 
 
+By default, we push and pull from the current branch of the remove Git
+repository. You can set the `g:vimwiki_sync_branch` to select specific branch:
+
+    let g:vimwiki_sync_branch = "main"
