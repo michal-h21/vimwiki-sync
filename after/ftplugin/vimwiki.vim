@@ -29,7 +29,7 @@ augroup vimwiki
   " command. the downside is that the command output is not displayed at all.
   " One idea: what about running git asynchronously?
   function! s:git_action(action)
-    execute ':silent !pushd ' . g:zettel_dir . "; ". a:action . "; popd"
+    execute ':silent !' . a:action 
     " prevent screen artifacts
     redraw!
   endfunction
@@ -77,8 +77,8 @@ augroup vimwiki
   au! VimEnter * call <sid>pull_changes()
   au! BufRead * call <sid>pull_changes()
   " auto commit changes on each file change
-  au! BufWritePost * call <sid>git_action("git add .;git commit -m \"Auto commit + push. " . strftime('%c') . "\"")
+  au! BufWritePost * call <sid>git_action("git -C " . g:zettel_dir . " add .;git -C " . g:zettel_dir . " commit -m \"Auto commit + push. " . strftime('%c') . "\"")
   " push changes only on at the end
-  au! VimLeave * call <sid>git_action("git push origin master")
+  au! VimLeave * call <sid>git_action("git -C " . g:zettel_dir . " push origin master")
   " au! VimLeave * call <sid>push_changes()
 augroup END
