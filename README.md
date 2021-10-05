@@ -12,6 +12,10 @@ Use your Vim plugin manager, for example using Vundle, add this line to your `.v
 
     Plugin 'git@github.com:michal-h21/vimwiki-sync.git'
 
+### vim-plug
+
+    Plug 'michal-h21/vimwiki-sync'
+
 # Usage
 
 This plugin automatically commit changes in Vimwiki directories. You need to initialize 
