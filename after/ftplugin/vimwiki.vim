@@ -10,8 +10,14 @@ augroup vimwiki
     let g:zettel_dir = vimwiki#vars#get_wikilocal('path') "VimwikiGet('path',g:vimwiki_current_idx)
   endif
 
+  " make the Git branch used for synchronization configurable
   if !exists('g:vimwiki_sync_branch')
     let g:vimwiki_sync_branch = "HEAD"
+  endif
+
+  " enable disabling of Taskwarrior synchronization
+  if !exists("g:sync_taskwarrior")
+    let g:sync_taskwarrior = 1
   endif
 
   " don't try to start synchronization if the opend file is not in vimwiki
@@ -56,10 +62,14 @@ augroup vimwiki
       let g:zettel_synced = 1
       if has("nvim")
         let gitjob = jobstart("git -C " . g:zettel_dir . " pull origin " . g:vimwiki_sync_branch, {"exit_cb": "My_exit_cb", "close_cb": "My_close_cb"})
-        let taskjob = jobstart("task sync")
+        if g:sync_taskwarrior==1
+          let taskjob = jobstart("task sync")
+        endif
       else
         let gitjob = job_start("git -C " . g:zettel_dir . " pull origin " . g:vimwiki_sync_branch, {"exit_cb": "My_exit_cb", "close_cb": "My_close_cb"})
-        let taskjob = job_start("task sync")
+        if g:sync_taskwarrior==1
+          let taskjob = job_start("task sync")
+        endif
       endif
     endif
   endfunction
@@ -70,10 +80,14 @@ augroup vimwiki
   function! s:push_changes()
     if has("nvim")
       let gitjob = jobstart("git -C " . g:zettel_dir . " push origin " . g:vimwiki_sync_branch)
-      let taskjob = jobstart("task sync")
+      if g:sync_taskwarrior==1
+        let taskjob = jobstart("task sync")
+      endif
     else
       let gitjob = job_start("git -C " . g:zettel_dir . " push origin " . g:vimwiki_sync_branch)
-      let taskjob = job_start("task sync")
+      if g:sync_taskwarrior==1
+        let taskjob = job_start("task sync")
+      endif
     endif
   endfunction
 

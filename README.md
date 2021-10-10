@@ -41,3 +41,11 @@ By default, we push and pull from the current branch of the remove Git
 repository. You can set the `g:vimwiki_sync_branch` to select specific branch:
 
     let g:vimwiki_sync_branch = "main"
+
+## Taskwiki support
+
+Vimwiki-sync automatically synchronize [Taskwiki](https://github.com/tools-life/taskwiki) 
+using [Taskwarrior](https://taskwarrior.org/). To disable it, set the following variable:
+
+
+    let g:sync_taskwarrior = 0
