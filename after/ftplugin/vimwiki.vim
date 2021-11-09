@@ -45,7 +45,7 @@ augroup vimwiki
   endfunction
 
   function! My_exit_cb(channel,msg )
-    echom "Sync done"
+    echom "[vimiwiki sync] Sync done"
     execute 'checktime' 
   endfunction
 
@@ -59,6 +59,7 @@ augroup vimwiki
   " we should add some error handling
   function! s:pull_changes()
     if g:zettel_synced==0
+      echom "[vimwiki sync] pulling changes"
       let g:zettel_synced = 1
       if has("nvim")
         let gitjob = jobstart("git -C " . g:zettel_dir . " pull origin " . g:vimwiki_sync_branch, {"exit_cb": "My_exit_cb", "close_cb": "My_close_cb"})
@@ -94,6 +95,7 @@ augroup vimwiki
   " sync changes at the start
   au! VimEnter * call <sid>pull_changes()
   au! BufRead * call <sid>pull_changes()
+  au! BufEnter * call <sid>pull_changes()
   " auto commit changes on each file change
   au! BufWritePost * call <sid>git_action("git -C " . g:zettel_dir . " add . ; git -C " . g:zettel_dir . " commit -m \"Auto commit + push. " . strftime('%c') . "\"")
   " push changes only on at the end
