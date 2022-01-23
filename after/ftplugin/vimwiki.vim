@@ -27,6 +27,10 @@ augroup vimwiki
     finish
   endif
 
+  if !exists('g:vimwiki_sync_commit_message')
+    let g:vimwiki_sync_commit_message = 'Auto commit + push. %c'
+  endif
+
   " don't sync temporary wiki
   if vimwiki#vars#get_wikilocal('is_temporary_wiki') == 1
     finish
@@ -97,7 +101,7 @@ augroup vimwiki
   au! BufRead * call <sid>pull_changes()
   au! BufEnter * call <sid>pull_changes()
   " auto commit changes on each file change
-  au! BufWritePost * call <sid>git_action("git -C " . g:zettel_dir . " add . ; git -C " . g:zettel_dir . " commit -m \"Auto commit + push. " . strftime('%c') . "\"")
+  au! BufWritePost * call <sid>git_action("git -C " . g:zettel_dir . " add . ; git -C " . g:zettel_dir . " commit -m \"" . strftime(g:vimwiki_sync_commit_message) . "\"")
   " push changes only on at the end
   au! VimLeave * call <sid>git_action("git -C " . g:zettel_dir . " push origin " . g:vimwiki_sync_branch)
   " au! VimLeave * call <sid>push_changes()
