@@ -51,6 +51,7 @@ augroup vimwiki
   function! My_exit_cb(channel,msg )
     echom "[vimiwiki sync] Sync done"
     execute 'checktime' 
+    redraw!
   endfunction
 
   function! My_close_cb(channel)
