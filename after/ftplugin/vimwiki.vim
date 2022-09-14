@@ -97,12 +97,28 @@ augroup vimwiki
     endif
   endfunction
 
+  " detect if there are some merge issues in the repository
+  " https://github.com/michal-h21/vimwiki-sync/issues/13
+  function! s:no_conflicts()
+    " this command should return empty string
+    let result = system("git -C " . g:zettel_dir . " diff --name-only --diff-filter=U")
+    echom "calling system: " . result
+    return result ==? ""
+  endfunction
+
+  function! s:commit_changes()
+    " commit only when there are no issues
+    if <sid>no_conflicts()  
+      call <sid>git_action("git -C " . g:zettel_dir . " add . ; git -C " . g:zettel_dir . " commit -m \"" . strftime(g:vimwiki_sync_commit_message) . "\"")
+    endif
+  endfunction
+
   " sync changes at the start
   au! VimEnter * call <sid>pull_changes()
   au! BufRead * call <sid>pull_changes()
   au! BufEnter * call <sid>pull_changes()
   " auto commit changes on each file change
-  au! BufWritePost * call <sid>git_action("git -C " . g:zettel_dir . " add . ; git -C " . g:zettel_dir . " commit -m \"" . strftime(g:vimwiki_sync_commit_message) . "\"")
+  au! BufWritePost * call <sid>commit_changes()
   " push changes only on at the end
   au! VimLeave * call <sid>git_action("git -C " . g:zettel_dir . " push origin " . g:vimwiki_sync_branch)
   " au! VimLeave * call <sid>push_changes()
