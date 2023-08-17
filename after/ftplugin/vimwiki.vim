@@ -100,6 +100,11 @@ augroup vimwiki
   " detect if there are some merge issues in the repository
   " https://github.com/michal-h21/vimwiki-sync/issues/13
   function! s:no_conflicts()
+    " first check if we are inside git repository
+    let result = system("git -C " . g:zettel_dir . " diff --name-only --diff-filter=U")
+    if result !=? "true"
+      return 0
+    end
     " this command should return empty string
     let result = system("git -C " . g:zettel_dir . " diff --name-only --diff-filter=U")
     echom "calling system: " . result
