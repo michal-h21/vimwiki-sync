@@ -101,7 +101,7 @@ augroup vimwiki
   " https://github.com/michal-h21/vimwiki-sync/issues/13
   function! s:no_conflicts()
     " first check if we are inside git repository
-    let result = system("git -C " . g:zettel_dir . " diff --name-only --diff-filter=U")
+    let result = system("git -C " . g:zettel_dir . " rev-parse --is-inside-work-tree")
     if result !=? "true"
       return 0
     end
