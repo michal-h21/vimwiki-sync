@@ -102,7 +102,7 @@ augroup vimwiki
   function! s:no_conflicts()
     " first check if we are inside git repository
     let result = system("git -C " . g:zettel_dir . " rev-parse --is-inside-work-tree")
-    if result !=? "true"
+    if result !=? "true\n"
       return 0
     end
     " this command should return empty string
